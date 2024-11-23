@@ -20,16 +20,6 @@
 </template>
 
 <style scoped>
-/*.addTaskBox {
-  background-color: #cdeccb;
-  height: 200px;
-  width: 600px;
-  border: 10px #090011;
-  border-radius: 8px;
-  margin: 10px; 
-  padding: 20px;
-}*/
-
 .addTaskBox {
   width: 600px;
   margin: 0 auto; 
