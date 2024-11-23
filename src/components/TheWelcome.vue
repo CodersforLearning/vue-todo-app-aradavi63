@@ -1,86 +1,113 @@
-<script setup>
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-</script>
-
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
-
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
-
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The
-    recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If
-    you need to test your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
-    <a href="https://on.cypress.io/component" target="_blank">Cypress Component Testing</a>.
-
-    <br />
-
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If
-    you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a href="https://chat.vuejs.org" target="_blank" rel="noopener">Vue Land</a>, our official
-    Discord server, or
-    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener"
-      >StackOverflow</a
-    >. You should also subscribe to
-    <a href="https://news.vuejs.org" target="_blank" rel="noopener">our mailing list</a> and follow
-    the official
-    <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help
-    us by
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+  <div class="addTaskBox">
+    <form id="taskForm" @submit.prevent="addTask">
+      <h2>To Do List</h2>
+      <input type="text" id="taskName" v-model="newTask" placeholder="Name of task">
+      <input type="submit" id="addTask" value="Add!">
+    </form>
+    <ul class="toDoList">
+      <li v-for="(task, index) in tasks" :key="index" :class="{ completed: task.completed }">
+        <span>{{ task.name }}</span>
+        <div>
+          <button @click="markAsCompleted(index)">
+            {{ task.completed ? "Undo" : "Completed" }}
+          </button>
+          <button @click="removeTask(index)">Remove</button>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
+
+<style scoped>
+.addTaskBox {
+  width: 600px;
+  margin: 0 auto; 
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 20px; 
+  background-color: #cdeccb; /* Light background for contrast */
+  border: solid 2px #333c46;
+  border-radius: 8px; /* Rounded corners */
+}
+
+
+input[type="text"] {
+  width: 70%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+input[type="submit"] {
+  padding: 8px 16px;
+  cursor: pointer;
+  
+}
+
+.toDoList {
+  background-color: #cdeccb;
+  list-style-type: none;
+  padding: 0;
+}
+
+.toDoList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3px;
+  padding: 8px;
+  border: solid 1px #283e59;
+}
+
+.toDoList li.completed {
+  text-decoration: line-through;
+  color: gray;
+  background-color: #babdba;
+}
+
+.toDoList button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.toDoList button:hover {
+  background: #0056b3;
+}
+
+.toDoList button:last-child {
+  background: red;
+}
+
+.toDoList button:last-child:hover {
+  background: darkred;
+}
+</style>
+
+<script>
+export default {
+  data() {
+    return {
+      newTask: '', // Holds the value of the input field
+      tasks: []    // Array to store tasks
+    };
+  },
+  methods: {
+    addTask() {
+      if (this.newTask.trim()) {
+        this.tasks.push({ name: this.newTask.trim(), completed: false }); // Add task with completed status
+        this.newTask = ''; // Clear the input field
+      }
+    },
+    removeTask(index) {
+      this.tasks.splice(index, 1); // Remove the task at the specified index
+    },
+    markAsCompleted(index) {
+      this.tasks[index].completed = !this.tasks[index].completed; // Toggle completed status
+    }
+  }
+};
+</script>
